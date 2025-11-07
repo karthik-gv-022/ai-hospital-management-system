@@ -1,0 +1,1121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Hospital Management System - Complete Setup Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <style>
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 4px solid #3498db;
+            width: 30px;
+            height: 30px;
+            animation: spin 2s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .status-indicator {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        .code-block {
+            background: #2d2d2d;
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+            position: relative;
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: #4a5568;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .copy-button:hover {
+            background: #2d3748;
+        }
+        .copy-button.copied {
+            background: #48bb78;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .install-progress {
+            transition: width 0.3s ease;
+        }
+        .tech-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            display: inline-block;
+            margin: 0.25rem;
+        }
+        .checklist-item {
+            transition: all 0.3s ease;
+        }
+        .checklist-item.completed {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+        }
+        .terminal {
+            background: #1e1e1e;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            color: #00ff00;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        .terminal-prompt {
+            color: #00ff00;
+        }
+        .terminal-command {
+            color: #ffffff;
+        }
+        .terminal-output {
+            color: #888888;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-2xl font-bold flex items-center">
+                        <svg class="w-8 h-8 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd"/>
+                            <path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z"/>
+                        </svg>
+                        AI Hospital Management System
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="status-indicator inline-block w-3 h-3 bg-green-400 rounded-full"></span>
+                    <span class="text-sm">Complete Setup Guide</span>
+                    <a href="https://github.com/karthik-gv-022/ai-hospital-management-system"
+                       class="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded transition inline-flex items-center">
+                        <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.605-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12"/>
+                        </svg>
+                        View on GitHub
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold text-gray-800 mb-4">
+                Complete Frontend & Backend Setup Guide
+            </h2>
+            <p class="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+                Step-by-step instructions to install and run the complete AI Hospital Management System with React frontend and FastAPI backend
+            </p>
+            <div class="flex justify-center space-x-4 mb-8">
+                <div class="tech-badge">FastAPI Backend</div>
+                <div class="tech-badge">React Frontend</div>
+                <div class="tech-badge">MySQL Database</div>
+                <div class="tech-badge">Docker Support</div>
+                <div class="tech-badge">AI/ML Models</div>
+            </div>
+        </div>
+
+        <!-- Quick Access Tabs -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <div class="flex flex-wrap gap-2 mb-6 border-b">
+                <button onclick="showTab('overview')" class="tab-btn px-4 py-2 font-semibold text-blue-600 border-b-2 border-blue-600" data-tab="overview">
+                    Overview
+                </button>
+                <button onclick="showTab('prerequisites')" class="tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-blue-600" data-tab="prerequisites">
+                    Prerequisites
+                </button>
+                <button onclick="showTab('backend')" class="tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-blue-600" data-tab="backend">
+                    Backend Setup
+                </button>
+                <button onclick="showTab('frontend')" class="tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-blue-600" data-tab="frontend">
+                    Frontend Setup
+                </button>
+                <button onclick="showTab('docker')" class="tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-blue-600" data-tab="docker">
+                    Docker Setup
+                </button>
+                <button onclick="showTab('troubleshooting')" class="tab-btn px-4 py-2 font-semibold text-gray-600 hover:text-blue-600" data-tab="troubleshooting">
+                    Troubleshooting
+                </button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <h3 class="text-2xl font-bold mb-6">System Overview</h3>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4 text-blue-800">🏗️ Architecture</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-blue-500 rounded-full mr-3"></div>
+                                <span><strong>Backend:</strong> FastAPI with Python 3.12</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3"></div>
+                                <span><strong>Frontend:</strong> React 18 with TypeScript</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-purple-500 rounded-full mr-3"></div>
+                                <span><strong>Database:</strong> MySQL 8.0 or SQLite</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-orange-500 rounded-full mr-3"></div>
+                                <span><strong>AI/ML:</strong> scikit-learn models</span>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="w-3 h-3 bg-cyan-500 rounded-full mr-3"></div>
+                                <span><strong>Deployment:</strong> Docker containers</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-green-50 rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4 text-green-800">🚀 Features</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Patient & Doctor Management</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>AI-Powered Doctor Recommendations</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Real-time Token Management</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Smart Appointment Booking</span>
+                            </div>
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 text-green-600 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                                </svg>
+                                <span>Analytics Dashboard</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Start Commands -->
+                <div class="bg-gray-900 rounded-lg p-6 mb-8">
+                    <h4 class="text-xl font-semibold mb-4 text-white">⚡ Quick Start (One-Liner)</h4>
+                    <div class="terminal">
+                        <div><span class="terminal-prompt">$</span> <span class="terminal-command">git clone https://github.com/karthik-gv-022/ai-hospital-management-system.git && cd ai-hospital-management-system</span></div>
+                        <div><span class="terminal-prompt">$</span> <span class="terminal-command">cd backend && pip install fastapi uvicorn sqlalchemy pydantic python-jose passlib && python test_api.py</span></div>
+                        <div><span class="terminal-output"># Backend running on http://localhost:8000</span></div>
+                        <div><span class="terminal-prompt">$</span> <span class="terminal-command">cd .. && python -m http.server 3000</span></div>
+                        <div><span class="terminal-output"># Frontend demo running on http://localhost:3000/demo.html</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prerequisites Tab -->
+            <div id="prerequisites" class="tab-content">
+                <h3 class="text-2xl font-bold mb-6">System Requirements</h3>
+
+                <div class="grid md:grid-cols-2 gap-8 mb-8">
+                    <div class="bg-white border rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4">🔧 Required Software</h4>
+                        <div class="space-y-4">
+                            <div class="checklist-item p-3 border rounded">
+                                <div class="flex items-center mb-2">
+                                    <span class="step-number mr-3">1</span>
+                                    <strong>Python 3.8+</strong>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-11">Required for FastAPI backend</p>
+                                <div class="code-block mt-2">
+                                    <button class="copy-button" onclick="copyCode(this, 'python --version')">Copy</button>
+                                    <code class="text-green-400">$ python --version</code>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item p-3 border rounded">
+                                <div class="flex items-center mb-2">
+                                    <span class="step-number mr-3">2</span>
+                                    <strong>Node.js 16+</strong>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-11">Required for React frontend development</p>
+                                <div class="code-block mt-2">
+                                    <button class="copy-button" onclick="copyCode(this, 'node --version')">Copy</button>
+                                    <code class="text-green-400">$ node --version</code>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item p-3 border rounded">
+                                <div class="flex items-center mb-2">
+                                    <span class="step-number mr-3">3</span>
+                                    <strong>Git</strong>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-11">For cloning the repository</p>
+                                <div class="code-block mt-2">
+                                    <button class="copy-button" onclick="copyCode(this, 'git --version')">Copy</button>
+                                    <code class="text-green-400">$ git --version</code>
+                                </div>
+                            </div>
+
+                            <div class="checklist-item p-3 border rounded">
+                                <div class="flex items-center mb-2">
+                                    <span class="step-number mr-3">4</span>
+                                    <strong>MySQL 8.0+ (Optional)</strong>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-11">For production database (SQLite works for development)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white border rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4">🐳 Optional (Docker Setup)</h4>
+                        <div class="space-y-4">
+                            <div class="p-3 border rounded">
+                                <div class="flex items-center mb-2">
+                                    <span class="step-number mr-3">1</span>
+                                    <strong>Docker</strong>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-11">Container platform</p>
+                                <div class="code-block mt-2">
+                                    <button class="copy-button" onclick="copyCode(this, 'docker --version')">Copy</button>
+                                    <code class="text-green-400">$ docker --version</code>
+                                </div>
+                            </div>
+
+                            <div class="p-3 border rounded">
+                                <div class="flex items-center mb-2">
+                                    <span class="step-number mr-3">2</span>
+                                    <strong>Docker Compose</strong>
+                                </div>
+                                <p class="text-sm text-gray-600 ml-11">Multi-container orchestration</p>
+                                <div class="code-block mt-2">
+                                    <button class="copy-button" onclick="copyCode(this, 'docker-compose --version')">Copy</button>
+                                    <code class="text-green-400">$ docker-compose --version</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 p-4 bg-blue-50 rounded-lg">
+                            <h5 class="font-semibold text-blue-800 mb-2">💡 System Requirements</h5>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                <li>• RAM: 2GB minimum (4GB recommended)</li>
+                                <li>• Storage: 10GB free space</li>
+                                <li>• OS: Windows 10+, macOS 10.15+, or Ubuntu 20.04+</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backend Setup Tab -->
+            <div id="backend" class="tab-content">
+                <h3 class="text-2xl font-bold mb-6">Backend Setup (FastAPI)</h3>
+
+                <div class="space-y-6">
+                    <!-- Step 1: Clone Repository -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">1</span>
+                            <h4 class="text-xl font-semibold">Clone Repository</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, 'git clone https://github.com/karthik-gv-022/ai-hospital-management-system.git\ncd ai-hospital-management-system')">Copy</button>
+                            <pre><code class="language-bash"># Clone the repository
+git clone https://github.com/karthik-gv-022/ai-hospital-management-system.git
+
+# Navigate to project directory
+cd ai-hospital-management-system</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Setup Virtual Environment -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">2</span>
+                            <h4 class="text-xl font-semibold">Setup Virtual Environment</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, 'cd backend\npython -m venv venv\n\n# On Windows\nvenv\\Scripts\\activate\n\n# On macOS/Linux\nsource venv/bin/activate')">Copy</button>
+                            <pre><code class="language-bash"># Navigate to backend directory
+cd backend
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows:
+venv\Scripts\activate
+
+# On macOS/Linux:
+source venv/bin/activate</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Install Dependencies -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">3</span>
+                            <h4 class="text-xl font-semibold">Install Dependencies</h4>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">Quick Install (Essential)</h5>
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this, 'pip install fastapi uvicorn sqlalchemy pydantic pydantic-settings python-jose passlib bcrypt python-multipart python-dotenv')">Copy</button>
+                                    <pre><code class="language-bash"># Essential packages only
+pip install fastapi uvicorn sqlalchemy pydantic pydantic-settings python-jose passlib bcrypt python-multipart python-dotenv</code></pre>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Full Install (All Features)</h5>
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this, 'pip install -r requirements.txt')">Copy</button>
+                                    <pre><code class="language-bash"># Install all dependencies including ML packages
+pip install -r requirements.txt</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Environment Configuration -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">4</span>
+                            <h4 class="text-xl font-semibold">Configure Environment</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, 'cp .env.example .env\n# Edit .env file with your settings')">Copy</button>
+                            <pre><code class="language-bash"># Copy environment template
+cp .env.example .env
+
+# Edit .env file with your database credentials
+nano .env  # or use any text editor</code></pre>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-yellow-50 rounded-lg">
+                            <h5 class="font-semibold text-yellow-800 mb-2">📝 Environment Variables</h5>
+                            <div class="code-block text-sm">
+                                <pre><code class="language-ini"># Database Configuration
+DATABASE_URL=sqlite:///./hospital.db  # SQLite for development
+# DATABASE_URL=mysql+pymysql://user:password@localhost:3306/hospital_db  # MySQL for production
+
+# JWT Configuration
+SECRET_KEY=your-secret-key-here-change-in-production
+ALGORITHM=HS256
+ACCESS_TOKEN_EXPIRE_MINUTES=1440
+
+# Application Configuration
+APP_NAME=AI Hospital Management System
+DEBUG=True
+ENVIRONMENT=development</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Start Backend Server -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">5</span>
+                            <h4 class="text-xl font-semibold">Start Backend Server</h4>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">Development Mode</h5>
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this, 'python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000')">Copy</button>
+                                    <pre><code class="language-bash"># Start with auto-reload
+python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000</code></pre>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Quick Test Server</h5>
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this, 'python test_api.py')">Copy</button>
+                                    <pre><code class="language-bash"># Simple test server (for demo)
+python test_api.py</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-green-50 rounded-lg">
+                            <h5 class="font-semibold text-green-800 mb-2">✅ Backend URLs</h5>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                <li>• API Base URL: <code class="bg-green-100 px-2 py-1 rounded">http://localhost:8000</code></li>
+                                <li>• API Documentation: <code class="bg-green-100 px-2 py-1 rounded">http://localhost:8000/docs</code></li>
+                                <li>• Health Check: <code class="bg-green-100 px-2 py-1 rounded">http://localhost:8000/health</code></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Frontend Setup Tab -->
+            <div id="frontend" class="tab-content">
+                <h3 class="text-2xl font-bold mb-6">Frontend Setup (React)</h3>
+
+                <div class="space-y-6">
+                    <!-- Step 1: Install Node.js -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">1</span>
+                            <h4 class="text-xl font-semibold">Verify Node.js Installation</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, 'node --version\nnpm --version')">Copy</button>
+                            <pre><code class="language-bash"># Check Node.js version (should be 16+)
+node --version
+
+# Check npm version
+npm --version
+
+# If not installed, download from: https://nodejs.org/</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Navigate to Frontend -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">2</span>
+                            <h4 class="text-xl font-semibold">Navigate to Frontend Directory</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, 'cd frontend')">Copy</button>
+                            <pre><code class="language-bash"># From project root, navigate to frontend
+cd frontend</code></pre>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Install Dependencies -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">3</span>
+                            <h4 class="text-xl font-semibold">Install Dependencies</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, 'npm install')">Copy</button>
+                            <pre><code class="language-bash"># Install all frontend dependencies
+npm install</code></pre>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-yellow-50 rounded-lg">
+                            <h5 class="font-semibold text-yellow-800 mb-2">⚠️ If Installation Fails</h5>
+                            <p class="text-sm text-yellow-700 mb-2">Try these alternatives:</p>
+                            <div class="code-block text-sm">
+                                <pre><code class="language-bash"># Clear npm cache
+npm cache clean --force
+
+# Install with legacy peer deps
+npm install --legacy-peer-deps
+
+# Or use yarn
+npm install -g yarn
+yarn install</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Configure API Endpoint -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">4</span>
+                            <h4 class="text-xl font-semibold">Configure API Endpoint</h4>
+                        </div>
+                        <p class="text-gray-600 mb-4">The frontend is configured to connect to the backend at <code>http://localhost:8000</code> by default.</p>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">package.json proxy</h5>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-json">{
+  "proxy": "http://localhost:8000"
+}</code></pre>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">API Configuration</h5>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-javascript">// src/config/api.js
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 5: Start Frontend Server -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">5</span>
+                            <h4 class="text-xl font-semibold">Start Frontend Server</h4>
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">Development Mode</h5>
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this, 'npm start')">Copy</button>
+                                    <pre><code class="language-bash"># Start React development server
+npm start</code></pre>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Alternative: Simple HTTP Server</h5>
+                                <div class="code-block">
+                                    <button class="copy-button" onclick="copyCode(this, 'cd ..\npython -m http.server 3000')">Copy</button>
+                                    <pre><code class="language-bash"># Go back to project root
+cd ..
+
+# Start simple HTTP server for demo
+python -m http.server 3000</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-green-50 rounded-lg">
+                            <h5 class="font-semibold text-green-800 mb-2">✅ Frontend URLs</h5>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                <li>• React App: <code class="bg-green-100 px-2 py-1 rounded">http://localhost:3000</code></li>
+                                <li>• Demo Page: <code class="bg-green-100 px-2 py-1 rounded">http://localhost:3000/demo.html</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Complete Application URLs -->
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4 text-blue-800">🎉 Complete Application Access</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">When Backend is Running:</h5>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>• Frontend: <code class="bg-blue-100 px-2 py-1 rounded">http://localhost:3000</code></li>
+                                    <li>• Backend API: <code class="bg-blue-100 px-2 py-1 rounded">http://localhost:8000</code></li>
+                                    <li>• API Docs: <code class="bg-blue-100 px-2 py-1 rounded">http://localhost:8000/docs</code></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Default Login Credentials:</h5>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>• Admin: <code class="bg-blue-100 px-2 py-1 rounded">admin@hospital.com / admin123</code></li>
+                                    <li>• Doctor: <code class="bg-blue-100 px-2 py-1 rounded">dr.smith@hospital.com / doctor123</code></li>
+                                    <li>• Patient: <code class="bg-blue-100 px-2 py-1 rounded">alice.brown@email.com / patient123</code></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Docker Setup Tab -->
+            <div id="docker" class="tab-content">
+                <h3 class="text-2xl font-bold mb-6">Docker Setup (Recommended for Production)</h3>
+
+                <div class="space-y-6">
+                    <!-- Development Docker Setup -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">1</span>
+                            <h4 class="text-xl font-semibold">Development Environment</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, 'docker-compose -f docker-compose.dev.yml up -d')">Copy</button>
+                            <pre><code class="language-bash"># Start all services in development mode
+docker-compose -f docker-compose.dev.yml up -d
+
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Stop services
+docker-compose -f docker-compose.dev.yml down</code></pre>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-blue-50 rounded-lg">
+                            <h5 class="font-semibold text-blue-800 mb-2">🐳 Development Services</h5>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                <li>• MySQL Database: <code class="bg-blue-100 px-2 py-1 rounded">localhost:3306</code></li>
+                                <li>• Redis Cache: <code class="bg-blue-100 px-2 py-1 rounded">localhost:6379</code></li>
+                                <li>• Backend API: <code class="bg-blue-100 px-2 py-1 rounded">http://localhost:8000</code></li>
+                                <li>• Frontend: <code class="bg-blue-100 px-2 py-1 rounded">http://localhost:3000</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Production Docker Setup -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <div class="flex items-center mb-4">
+                            <span class="step-number mr-4">2</span>
+                            <h4 class="text-xl font-semibold">Production Environment</h4>
+                        </div>
+                        <div class="code-block">
+                            <button class="copy-button" onclick="copyCode(this, '# Copy production environment file\ncp .env.example .env.production\n\n# Edit .env.production with production settings\nnano .env.production\n\n# Start production services\ndocker-compose -f docker-compose.prod.yml up -d')">Copy</button>
+                            <pre><code class="language-bash"># Copy production environment file
+cp .env.example .env.production
+
+# Edit .env.production with production settings
+nano .env.production
+
+# Start production services
+docker-compose -f docker-compose.prod.yml up -d</code></pre>
+                        </div>
+
+                        <div class="mt-4 p-4 bg-green-50 rounded-lg">
+                            <h5 class="font-semibold text-green-800 mb-2">🚀 Production Services</h5>
+                            <ul class="text-sm text-green-700 space-y-1">
+                                <li>• Load Balancer: <code class="bg-green-100 px-2 py-1 rounded">nginx:80/443</code></li>
+                                <li>• Backend Services: <code class="bg-green-100 px-2 py-1 rounded">internal:8000</code></li>
+                                <li>• Frontend Build: <code class="bg-green-100 px-2 py-1 rounded">nginx static files</code></li>
+                                <li>• Database: <code class="bg-green-100 px-2 py-1 rounded">MySQL with persistence</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Docker Management Commands -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4">Docker Management Commands</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">Monitoring</h5>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-bash"># Check running containers
+docker ps
+
+# View container logs
+docker logs [container-name]
+
+# Resource usage
+docker stats</code></pre>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Maintenance</h5>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-bash"># Rebuild containers
+docker-compose build
+
+# Remove all containers
+docker-compose down --remove-orphans
+
+# Clean up unused images
+docker system prune -a</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting Tab -->
+            <div id="troubleshooting" class="tab-content">
+                <h3 class="text-2xl font-bold mb-6">Troubleshooting Guide</h3>
+
+                <div class="space-y-6">
+                    <!-- Common Issues -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4">🔧 Common Issues & Solutions</h4>
+
+                        <div class="space-y-4">
+                            <div class="border-l-4 border-red-500 pl-4">
+                                <h5 class="font-semibold text-red-800">Port Already in Use</h5>
+                                <p class="text-sm text-gray-600 mb-2">Error: <code>Port 8000 is already in use</code></p>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-bash"># Find process using port
+lsof -i :8000  # macOS/Linux
+netstat -ano | findstr :8000  # Windows
+
+# Kill process
+kill -9 [PID]  # macOS/Linux
+taskkill /PID [PID] /F  # Windows</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="border-l-4 border-yellow-500 pl-4">
+                                <h5 class="font-semibold text-yellow-800">Module Not Found</h5>
+                                <p class="text-sm text-gray-600 mb-2">Error: <code>ModuleNotFoundError: No module named 'fastapi'</code></p>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-bash"># Ensure virtual environment is activated
+source venv/bin/activate  # macOS/Linux
+venv\Scripts\activate     # Windows
+
+# Install dependencies
+pip install fastapi uvicorn sqlalchemy pydantic
+
+# Or install all requirements
+pip install -r requirements.txt</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="border-l-4 border-blue-500 pl-4">
+                                <h5 class="font-semibold text-blue-800">Database Connection Error</h5>
+                                <p class="text-sm text-gray-600 mb-2">Error: <code>Can't connect to MySQL server</code></p>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-bash"># Use SQLite for development
+DATABASE_URL=sqlite:///./hospital.db
+
+# Or check MySQL service
+sudo systemctl status mysql  # Linux
+brew services start mysql   # macOS</code></pre>
+                                </div>
+                            </div>
+
+                            <div class="border-l-4 border-purple-500 pl-4">
+                                <h5 class="font-semibold text-purple-800">Frontend Build Failed</h5>
+                                <p class="text-sm text-gray-600 mb-2">Error: <code>npm ERR! peer dependency conflict</code></p>
+                                <div class="code-block text-sm">
+                                    <pre><code class="language-bash"># Clear cache and reinstall
+npm cache clean --force
+rm -rf node_modules package-lock.json
+npm install --legacy-peer-deps</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Performance Tips -->
+                    <div class="bg-white border rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4">⚡ Performance Tips</h4>
+
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">Backend Optimization</h5>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Use SQLite for development, MySQL for production</li>
+                                    <li>• Enable database connection pooling</li>
+                                    <li>• Use Redis for session storage</li>
+                                    <li>• Implement API rate limiting</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Frontend Optimization</h5>
+                                <ul class="text-sm space-y-1">
+                                    <li>• Use React.memo for component optimization</li>
+                                    <li>• Implement lazy loading for routes</li>
+                                    <li>• Optimize bundle size with code splitting</li>
+                                    <li>• Use service workers for caching</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Getting Help -->
+                    <div class="bg-blue-50 rounded-lg p-6">
+                        <h4 class="text-xl font-semibold mb-4 text-blue-800">💡 Getting Help</h4>
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div>
+                                <h5 class="font-semibold mb-2">Resources</h5>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>• <a href="https://github.com/karthik-gv-022/ai-hospital-management-system" class="underline">GitHub Repository</a></li>
+                                    <li>• <a href="https://fastapi.tiangolo.com/" class="underline">FastAPI Documentation</a></li>
+                                    <li>• <a href="https://reactjs.org/docs/" class="underline">React Documentation</a></li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h5 class="font-semibold mb-2">Community</h5>
+                                <ul class="text-sm text-blue-700 space-y-1">
+                                    <li>• Create GitHub Issue for bugs</li>
+                                    <li>• Join Discord community</li>
+                                    <li>• Check Stack Overflow</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Installation Progress Tracker -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-xl font-semibold mb-4">📊 Installation Progress Tracker</h3>
+            <div class="space-y-4">
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium">Prerequisites</span>
+                        <span class="text-sm text-gray-600" id="prereq-progress">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="install-progress bg-blue-600 h-2 rounded-full" id="prereq-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium">Backend Setup</span>
+                        <span class="text-sm text-gray-600" id="backend-progress">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="install-progress bg-green-600 h-2 rounded-full" id="backend-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-medium">Frontend Setup</span>
+                        <span class="text-sm text-gray-600" id="frontend-progress">0%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="install-progress bg-purple-600 h-2 rounded-full" id="frontend-bar" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature Showcase -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h3 class="text-2xl font-bold mb-6">🎯 System Features</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="feature-card bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-blue-500 rounded-lg p-2 mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold">Authentication</h4>
+                    </div>
+                    <p class="text-sm text-gray-600">JWT-based authentication with role-based access control for patients, doctors, and administrators.</p>
+                </div>
+
+                <div class="feature-card bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-purple-500 rounded-lg p-2 mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold">AI Recommendations</h4>
+                    </div>
+                    <p class="text-sm text-gray-600">Machine learning-powered doctor recommendations using Gradient Boosting Classifier.</p>
+                </div>
+
+                <div class="feature-card bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-orange-500 rounded-lg p-2 mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100 2 1 1 0 000-2z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold">Queue Management</h4>
+                    </div>
+                    <p class="text-sm text-gray-600">Real-time token generation and queue management with digital display integration.</p>
+                </div>
+
+                <div class="feature-card bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-red-500 rounded-lg p-2 mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold">Smart Appointments</h4>
+                    </div>
+                    <p class="text-sm text-gray-600">Intelligent appointment booking with conflict detection and automated scheduling.</p>
+                </div>
+
+                <div class="feature-card bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-indigo-500 rounded-lg p-2 mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M2 10a8 8 0 018-8v8h8a8 8 0 11-16 0z"/>
+                                <path d="M12 2.252A8.014 8.014 0 0117.748 8H12V2.252z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold">Analytics Dashboard</h4>
+                    </div>
+                    <p class="text-sm text-gray-600">Comprehensive analytics with real-time insights and performance metrics.</p>
+                </div>
+
+                <div class="feature-card bg-gray-50 rounded-lg p-4">
+                    <div class="flex items-center mb-3">
+                        <div class="bg-cyan-500 rounded-lg p-2 mr-3">
+                            <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12.04 8.04c-.52 0-1.02.1-1.48.28l3.56 3.56c.18-.46.28-.96.28-1.48a2.36 2.36 0 00-2.36-2.36M9.52 8.56c-.18.46-.28.96-.28 1.48c0 1.3 1.06 2.36 2.36 2.36c.52 0 1.02-.1 1.48-.28L9.52 8.56M20.41 7.41L14.41 1.41L12 3.83L3.83 12L12 20.17l8.17-8.17l2.42-2.41M10.07 13.93c-2.12 0-3.83-1.71-3.83-3.83c0-2.12 1.71-3.83 3.83-3.83c2.12 0 3.83 1.71 3.83 3.83c0 2.12-1.71 3.83-3.83 3.83z"/>
+                            </svg>
+                        </div>
+                        <h4 class="font-semibold">Production Ready</h4>
+                    </div>
+                    <p class="text-sm text-gray-600">Complete Docker configuration with production deployment setup.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <h5 class="font-semibold mb-3">AI Hospital Management System</h5>
+                    <p class="text-gray-400 text-sm">
+                        Complete setup guide for the AI-powered healthcare management platform with React frontend and FastAPI backend.
+                    </p>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-3">Quick Links</h5>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="https://github.com/karthik-gv-022/ai-hospital-management-system" class="text-gray-400 hover:text-white">GitHub Repository</a></li>
+                        <li><a href="#backend" class="text-gray-400 hover:text-white">Backend Setup</a></li>
+                        <li><a href="#frontend" class="text-gray-400 hover:text-white">Frontend Setup</a></li>
+                        <li><a href="#docker" class="text-gray-400 hover:text-white">Docker Setup</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-semibold mb-3">Installation Status</h5>
+                    <div class="flex items-center">
+                        <span class="inline-block w-3 h-3 bg-green-400 rounded-full mr-2"></span>
+                        <span class="text-sm">Setup Guide Ready</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mt-2">
+                        Follow this guide to install and run the complete system locally.
+                    </p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-gray-400">
+                <p>💙 Built with FastAPI, React, and Modern Web Technologies</p>
+                <p class="mt-2">© 2024 AI Hospital Management System. Open source under MIT License.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab switching functionality
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Remove active class from all tab buttons
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => {
+                btn.classList.remove('text-blue-600', 'border-b-2', 'border-blue-600');
+                btn.classList.add('text-gray-600');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Highlight active tab button
+            const activeBtn = document.querySelector(`[data-tab="${tabName}"]`);
+            activeBtn.classList.remove('text-gray-600');
+            activeBtn.classList.add('text-blue-600', 'border-b-2', 'border-blue-600');
+        }
+
+        // Copy code functionality
+        function copyCode(button, code) {
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Progress tracking simulation
+        function updateProgress() {
+            const progressBars = [
+                { id: 'prereq', target: 100, delay: 500 },
+                { id: 'backend', target: 100, delay: 2000 },
+                { id: 'frontend', target: 100, delay: 3500 }
+            ];
+
+            progressBars.forEach(({ id, target, delay }) => {
+                setTimeout(() => {
+                    let current = 0;
+                    const increment = target / 20;
+                    const timer = setInterval(() => {
+                        current += increment;
+                        if (current >= target) {
+                            current = target;
+                            clearInterval(timer);
+                        }
+
+                        document.getElementById(`${id}-progress`).textContent = `${Math.round(current)}%`;
+                        document.getElementById(`${id}-bar`).style.width = `${current}%`;
+                    }, 100);
+                }, delay);
+            });
+        }
+
+        // Initialize progress on page load
+        setTimeout(updateProgress, 1000);
+
+        // Add smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add hover effects to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
