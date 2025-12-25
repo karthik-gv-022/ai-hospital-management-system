@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
+  Container,
   Grid,
   Card,
   CardContent,
@@ -35,11 +36,15 @@ import {
   SmartToy,
   Analytics,
   Settings,
+  Logout,
+  AccountCircle,
+  MedicalServices,
 } from '@mui/icons-material';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
 import { fetchDoctorProfile, fetchTodayAppointments } from '../../store/slices/doctorSlice';
 import { useNavigate } from 'react-router-dom';
+import { logoutAsync } from '../../store/slices/authSlice';
 
 const DoctorDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -78,6 +83,11 @@ const DoctorDashboard: React.FC = () => {
     navigate('/doctor/ai-assistant');
   };
 
+  const handleLogout = () => {
+    dispatch(logoutAsync());
+    navigate('/login');
+  };
+
   if (isLoading && !profile) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
@@ -107,50 +117,195 @@ const DoctorDashboard: React.FC = () => {
     : 0;
 
   return (
-    <Box sx={{ minHeight: '100vh', backgroundColor: '#F9FAFB' }}>
-      {/* Welcome Header */}
-      <Paper
-        elevation={0}
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+      {/* Hero Section */}
+      <Box
         sx={{
-          p: 4,
-          mb: 4,
-          background: 'linear-gradient(135deg, #7C3AED 0%, #22D3EE 100%)',
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
           color: 'white',
-          borderRadius: 3
+          py: 6,
+          textAlign: 'center',
+          position: 'relative'
         }}
       >
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Box>
-            <Typography variant="h3" component="h1" gutterBottom fontWeight="bold">
-              Welcome back, Dr. {profile?.first_name}! 👨‍⚕️
-            </Typography>
-            <Typography variant="h6" sx={{ opacity: 0.9 }}>
-              {currentTime.toLocaleDateString('en-US', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-              })}
-            </Typography>
-            <Typography variant="body1" sx={{ opacity: 0.8, mt: 1 }}>
-              Manage your consultations and patient care with AI-powered insights
-            </Typography>
-          </Box>
-          <Avatar
-            sx={{
-              width: 80,
-              height: 80,
-              bgcolor: 'rgba(255,255,255,0.2)',
-              fontSize: '2rem'
-            }}
-          >
-            {profile?.first_name?.[0]}{profile?.last_name?.[0]}
-          </Avatar>
+        {/* Navigation Bar */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            py: 2
+          }}
+        >
+          <Container maxWidth="lg">
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h6" fontWeight="bold">
+                Doctor Management - Doctor Portal
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Chip
+                  icon={<MedicalServices />}
+                  label={`Dr. ${profile?.first_name || 'Doctor'}`}
+                  sx={{
+                    backgroundColor: 'rgba(255,255,255,0.2)',
+                    color: 'white',
+                    '& .MuiChip-icon': { color: 'white' }
+                  }}
+                />
+                <IconButton
+                  color="inherit"
+                  onClick={handleLogout}
+                  sx={{
+                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' }
+                  }}
+                >
+                  <Logout />
+                </IconButton>
+              </Box>
+            </Box>
+          </Container>
         </Box>
-      </Paper>
 
-      {/* Quick Stats */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
+        <Container maxWidth="lg" sx={{ pt: 6 }}>
+          <Typography variant="h3" component="h1" gutterBottom fontWeight="bold">
+            Welcome back, Dr. {profile?.first_name}! 👨‍⚕️
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            {currentTime.toLocaleDateString('en-US', {
+              weekday: 'long',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            })}
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 4, opacity: 0.9 }}>
+            Manage your consultations and patient care with AI-powered insights.
+          </Typography>
+
+          {/* Quick Stats Overview */}
+          <Grid container spacing={3} sx={{ mt: 4 }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <CalendarToday sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
+                    {scheduledAppointments.length}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Today's Appointments
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <CheckCircle sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
+                    {completedAppointments.length}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Completed Today
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <Pending sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
+                    {inProgressAppointments.length}
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    In Progress
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <TrendingUp sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
+                    {completionRate}%
+                  </Typography>
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Completion Rate
+                  </Typography>
+                </Box>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Main Content */}
+      <Container maxWidth="lg" sx={{ py: 4 }}>
+        {/* Doctor Profile Header */}
+        <Paper sx={{ p: 3, mb: 4, borderRadius: 3, background: 'linear-gradient(135deg, #667eea20 0%, #764ba220 100%)' }}>
+          <Box display="flex" alignItems="center" gap={3}>
+            <Avatar
+              sx={{
+                width: 80,
+                height: 80,
+                fontSize: '2rem',
+                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                color: 'white'
+              }}
+            >
+              {profile?.first_name?.[0]}{profile?.last_name?.[0]}
+            </Avatar>
+            <Box flex={1}>
+              <Typography variant="h5" fontWeight="bold">
+                Dr. {profile?.first_name} {profile?.last_name}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {profile?.department}
+              </Typography>
+            </Box>
+          </Box>
+        </Paper>
+
+        {/* Quick Stats */}
+        <Grid container spacing={3} sx={{ mb: 4 }}>
         <Grid item xs={12} sm={6} md={3}>
           <Card sx={{ borderRadius: 3, position: 'relative', overflow: 'visible' }}>
             <CardContent sx={{ textAlign: 'center' }}>
@@ -397,6 +552,7 @@ const DoctorDashboard: React.FC = () => {
           </CardContent>
         </Card>
       )}
+    </Container>
     </Box>
   );
 };

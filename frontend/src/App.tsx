@@ -25,6 +25,7 @@ import PatientDashboard from './pages/patient/Dashboard';
 import DoctorDashboard from './pages/doctor/Dashboard';
 import AdminDashboard from './pages/admin/Dashboard';
 import NotFound from './pages/NotFound';
+import PostLoginSetup from './pages/auth/PostLoginSetup';
 
 // Create theme
 const theme = createTheme({
@@ -140,6 +141,15 @@ const AuthenticatedApp: React.FC = () => {
   return (
     <Layout>
       <Routes>
+        {/* Post Login Setup (shown once after login) */}
+        <Route
+          path="/setup"
+          element={
+            <ProtectedRoute roles={['patient', 'doctor', 'admin']}>
+              <PostLoginSetup />
+            </ProtectedRoute>
+          }
+        />
         {/* Redirect root to appropriate dashboard */}
         <Route
           path="/"

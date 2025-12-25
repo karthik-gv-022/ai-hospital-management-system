@@ -82,7 +82,8 @@ const Login: React.FC = () => {
 
     try {
       await dispatch(loginAsync(data)).unwrap();
-      // Navigation will be handled by useEffect
+      // After successful login, send user to setup page first
+      navigate('/setup', { replace: true });
     } catch (error) {
       // Error is handled by Redux slice
     } finally {

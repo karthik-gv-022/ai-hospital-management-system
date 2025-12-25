@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import {
   Box,
+  Container,
   Grid,
   Card,
   CardContent,
@@ -11,6 +12,11 @@ import {
   ListItemText,
   CircularProgress,
   Alert,
+  Avatar,
+  Paper,
+  IconButton,
+  Divider,
+  Chip,
 } from '@mui/material';
 import {
   People,
@@ -21,6 +27,12 @@ import {
   Assessment,
   Settings,
   PersonAdd,
+  Dashboard as DashboardIcon,
+  Analytics,
+  AdminPanelSettings,
+  AccountCircle,
+  Logout,
+  Menu as MenuIcon,
 } from '@mui/icons-material';
 
 import { useAppDispatch, useAppSelector } from '../../hooks/redux';
@@ -30,6 +42,7 @@ import {
   fetchSystemHealth,
 } from '../../store/slices/adminSlice';
 import { useNavigate } from 'react-router-dom';
+import { logoutAsync } from '../../store/slices/authSlice';
 
 const AdminDashboard: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -64,6 +77,11 @@ const AdminDashboard: React.FC = () => {
     navigate('/admin/appointments');
   };
 
+  const handleLogout = () => {
+    dispatch(logoutAsync());
+    navigate('/login');
+  };
+
   if (isLoading && !dashboardStats) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" minHeight="60vh">
@@ -77,182 +95,346 @@ const AdminDashboard: React.FC = () => {
   }
 
   return (
-    <Box>
-      {/* Welcome Section */}
-      <Typography variant="h4" component="h1" gutterBottom fontWeight="bold">
-        Admin Dashboard
-      </Typography>
-      <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
-        Manage hospital operations and monitor system performance
-      </Typography>
+    <Box sx={{ minHeight: '100vh', backgroundColor: '#f8f9fa' }}>
+      {/* Hero Section */}
+      <Box
+        sx={{
+          background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+          color: 'white',
+          py: 6,
+          textAlign: 'center',
+          position: 'relative'
+        }}
+      >
+        {/* Navigation Bar */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: 'rgba(0,0,0,0.1)',
+            py: 2
+          }}
+        >
+          <Container maxWidth="lg">
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant="h6" fontWeight="bold">
+                Doctor Management - Admin Panel
+              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                <Chip
+                  icon={<AdminPanelSettings />}
+                  label="Administrator"
+                  sx={{
+                    backgroundColor: 'rgba(255,255,255,0.2)',
+                    color: 'white',
+                    '& .MuiChip-icon': { color: 'white' }
+                  }}
+                />
+                <IconButton
+                  color="inherit"
+                  onClick={handleLogout}
+                  sx={{
+                    '&:hover': { backgroundColor: 'rgba(255,255,255,0.1)' }
+                  }}
+                >
+                  <Logout />
+                </IconButton>
+              </Box>
+            </Box>
+          </Container>
+        </Box>
 
-      {/* Overview Stats */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center">
-                <People color="primary" sx={{ mr: 2, fontSize: 40 }} />
-                <Box>
-                  <Typography color="textSecondary" gutterBottom>
-                    Total Patients
-                  </Typography>
-                  <Typography variant="h5" component="h2">
+        <Container maxWidth="lg" sx={{ pt: 6 }}>
+          <Typography variant="h3" component="h1" gutterBottom fontWeight="bold">
+            Welcome to Admin Dashboard
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Manage Hospital Operations & Monitor System Performance
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 4, opacity: 0.9 }}>
+            Oversee doctors, patients, appointments, and system analytics from your centralized dashboard.
+          </Typography>
+
+          {/* Quick Stats Overview */}
+          <Grid container spacing={3} sx={{ mt: 4 }}>
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <People sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
                     {dashboardStats?.overview.total_patients || 0}
                   </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center">
-                <MedicalServices color="success" sx={{ mr: 2, fontSize: 40 }} />
-                <Box>
-                  <Typography color="textSecondary" gutterBottom>
-                    Total Doctors
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Total Patients
                   </Typography>
-                  <Typography variant="h5" component="h2">
+                </Box>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <MedicalServices sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
                     {dashboardStats?.overview.total_doctors || 0}
                   </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center">
-                <CalendarToday color="warning" sx={{ mr: 2, fontSize: 40 }} />
-                <Box>
-                  <Typography color="textSecondary" gutterBottom>
-                    Today's Appointments
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Total Doctors
                   </Typography>
-                  <Typography variant="h5" component="h2">
+                </Box>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <CalendarToday sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
                     {dashboardStats?.overview.today_appointments || 0}
                   </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-
-        <Grid item xs={12} sm={6} md={3}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center">
-                <TrendingUp color="info" sx={{ mr: 2, fontSize: 40 }} />
-                <Box>
-                  <Typography color="textSecondary" gutterBottom>
-                    Total Users
-                  </Typography>
-                  <Typography variant="h5" component="h2">
-                    {dashboardStats?.overview.total_users || 0}
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Today's Appointments
                   </Typography>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
+              </Paper>
+            </Grid>
 
-      {/* Revenue Stats */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} sm={6}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center">
-                <AttachMoney color="success" sx={{ mr: 2, fontSize: 40 }} />
-                <Box>
-                  <Typography color="textSecondary" gutterBottom>
-                    Total Revenue
+            <Grid item xs={12} sm={6} md={3}>
+              <Paper
+                sx={{
+                  p: 3,
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  backdropFilter: 'blur(10px)',
+                  borderRadius: 2,
+                  border: '1px solid rgba(255,255,255,0.2)'
+                }}
+              >
+                <Box display="flex" alignItems="center" justifyContent="center" flexDirection="column">
+                  <TrendingUp sx={{ fontSize: 48, mb: 1, opacity: 0.9 }} />
+                  <Typography variant="h4" fontWeight="bold">
+                    {dashboardStats?.overview.total_appointments || 0}
                   </Typography>
-                  <Typography variant="h4" component="h2">
-                    ${dashboardStats?.revenue.total_revenue?.toFixed(2) || '0.00'}
+                  <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                    Total Appointments
                   </Typography>
                 </Box>
-              </Box>
-            </CardContent>
-          </Card>
+              </Paper>
+            </Grid>
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Main Dashboard Content */}
+      <Container maxWidth="lg" sx={{ py: 6 }}>
+        {/* Management Actions */}
+        <Grid container spacing={4} sx={{ mb: 6 }}>
+          <Grid item xs={12} md={6} lg={3}>
+            <Card
+              sx={{
+                height: '100%',
+                cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: 4
+                }
+              }}
+              onClick={handleManageUsers}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <People sx={{ fontSize: 48, color: 'primary.main', mb: 2 }} />
+                <Typography variant="h6" gutterBottom fontWeight="bold">
+                  Manage Users
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Add, edit, and manage user accounts
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={3}>
+            <Card
+              sx={{
+                height: '100%',
+                cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: 4
+                }
+              }}
+              onClick={handleManageDoctors}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <MedicalServices sx={{ fontSize: 48, color: 'success.main', mb: 2 }} />
+                <Typography variant="h6" gutterBottom fontWeight="bold">
+                  Manage Doctors
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Oversee doctor profiles and specializations
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={3}>
+            <Card
+              sx={{
+                height: '100%',
+                cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: 4
+                }
+              }}
+              onClick={handleManagePatients}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <People sx={{ fontSize: 48, color: 'warning.main', mb: 2 }} />
+                <Typography variant="h6" gutterBottom fontWeight="bold">
+                  Manage Patients
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  View and manage patient records
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={3}>
+            <Card
+              sx={{
+                height: '100%',
+                cursor: 'pointer',
+                transition: 'transform 0.2s, box-shadow 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: 4
+                }
+              }}
+              onClick={handleViewAppointments}
+            >
+              <CardContent sx={{ textAlign: 'center', p: 3 }}>
+                <CalendarToday sx={{ fontSize: 48, color: 'info.main', mb: 2 }} />
+                <Typography variant="h6" gutterBottom fontWeight="bold">
+                  Appointments
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  Monitor and manage all appointments
+                </Typography>
+              </CardContent>
+            </Card>
+          </Grid>
         </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Card>
-            <CardContent>
-              <Box display="flex" alignItems="center">
-                <TrendingUp color="primary" sx={{ mr: 2, fontSize: 40 }} />
-                <Box>
-                  <Typography color="textSecondary" gutterBottom>
-                    Monthly Revenue
-                  </Typography>
-                  <Typography variant="h4" component="h2">
-                    ${dashboardStats?.revenue.monthly_revenue?.toFixed(2) || '0.00'}
-                  </Typography>
-                </Box>
-              </Box>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid>
-
-      {/* Quick Actions */}
-      <Grid container spacing={3} sx={{ mb: 4 }}>
-        <Grid item xs={12} md={6}>
-          <Card>
-            <CardContent>
-              <Typography variant="h6" gutterBottom>
-                Management
+        {/* Detailed Stats Section */}
+        <Grid container spacing={4}>
+          <Grid item xs={12} md={8}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h5" gutterBottom fontWeight="bold">
+                System Overview
               </Typography>
-              <Grid container spacing={2}>
+              <Divider sx={{ mb: 3 }} />
+
+              <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
-                  <Button
-                    variant="contained"
-                    startIcon={<People />}
-                    onClick={handleManageUsers}
-                    fullWidth
-                  >
-                    Manage Users
-                  </Button>
+                  <Box sx={{ textAlign: 'center', p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <AttachMoney sx={{ fontSize: 40, color: 'success.main', mb: 1 }} />
+                    <Typography variant="h6" fontWeight="bold">
+                      ${dashboardStats?.revenue.total_revenue?.toFixed(2) || '0.00'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Total Revenue
+                    </Typography>
+                  </Box>
                 </Grid>
+
                 <Grid item xs={12} sm={6}>
-                  <Button
-                    variant="contained"
-                    startIcon={<MedicalServices />}
-                    onClick={handleManageDoctors}
-                    fullWidth
-                  >
-                    Manage Doctors
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<PersonAdd />}
-                    onClick={handleManagePatients}
-                    fullWidth
-                  >
-                    Manage Patients
-                  </Button>
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<CalendarToday />}
-                    onClick={handleViewAppointments}
-                    fullWidth
-                  >
-                    View Appointments
-                  </Button>
+                  <Box sx={{ textAlign: 'center', p: 2, border: '1px solid #e0e0e0', borderRadius: 2 }}>
+                    <TrendingUp sx={{ fontSize: 40, color: 'primary.main', mb: 1 }} />
+                    <Typography variant="h6" fontWeight="bold">
+                      ${dashboardStats?.revenue.monthly_revenue?.toFixed(2) || '0.00'}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      Monthly Revenue
+                    </Typography>
+                  </Box>
                 </Grid>
               </Grid>
-            </CardContent>
-          </Card>
+            </Card>
+          </Grid>
+
+          <Grid item xs={12} md={4}>
+            <Card sx={{ p: 3 }}>
+              <Typography variant="h5" gutterBottom fontWeight="bold">
+                Quick Actions
+              </Typography>
+              <Divider sx={{ mb: 3 }} />
+
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Button
+                  variant="contained"
+                  startIcon={<Analytics />}
+                  onClick={handleViewAnalytics}
+                  fullWidth
+                  sx={{ justifyContent: 'flex-start' }}
+                >
+                  View Analytics
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<Settings />}
+                  onClick={() => navigate('/admin/settings')}
+                  fullWidth
+                  sx={{ justifyContent: 'flex-start' }}
+                >
+                  System Settings
+                </Button>
+                <Button
+                  variant="outlined"
+                  startIcon={<Assessment />}
+                  onClick={() => navigate('/admin/reports')}
+                  fullWidth
+                  sx={{ justifyContent: 'flex-start' }}
+                >
+                  Generate Reports
+                </Button>
+              </Box>
+            </Card>
+          </Grid>
         </Grid>
+      </Container>
+    </Box>
+  );
+};
 
         <Grid item xs={12} md={6}>
           <Card>
